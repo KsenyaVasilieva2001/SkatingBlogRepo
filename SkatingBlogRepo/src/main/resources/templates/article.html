@@ -1,0 +1,86 @@
+<#ftl encoding="UTF-8"/>
+<html lang="ru">
+<#import "spring.ftl" as spring/>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="${springMacroRequestContext.contextPath}/css/style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    <title>FigureSkateBlog</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <#import "blocks/header.ftl" as header>
+    <@header.header />
+</nav>
+
+
+<p class="text-center fs-1 m-4">Видео</p>
+
+<div class="container">
+    <section class="">
+        <div class="row">
+            <div class = "mainContent col-9">
+                <c:set var="category" value="${CATEGORY_MAP[article.idCategory]}" />
+                <div class="col special_col p-5 mb-4">
+                    <div class="embed-responsive video mb-5">
+                        <iframe width="560" height="315" class="embed-responsive-item" src="${article.videoUrl}" allowfullscreen></iframe>
+                    </div>
+                    <div class="data">
+                        <h3><a href="${pageContext.request.contextPath}${article.articleUrl}">${article.title}</a></h3>
+                        <ul class="vertical large-horizontal menu">
+                            <li class="blue_items"><i class="fas fa-comments"></i></i><fmt:formatNumber value="${article.comments}" /> comments</li>
+                            <li class="blue_items"><i class="fas fa-clock"></i></i><fmt:formatDate value="${article.created}" dateStyle="FULL" timeStyle="SHORT" type="both"/></li>
+                            <li class="blue_items"><i class="fas fa-eye"></i></i>Hits: <fmt:formatNumber value="${article.views}" /></li>
+                        </ul>
+                        <hr>
+                        <div class="content">
+                            <p>${article.content}</p>
+                        </div>
+                        <br>
+                    </div>
+                    <section class = "comments">
+
+                        <jsp:include page="../fragment/newComment.jsp" />
+                        <div id="comments-list-container" data-comments-count="${article.comments}" data-id-article="${article.id}">
+                            <jsp:include page="../fragment/videoComment.jsp" />
+                        </div>
+                        <div class="d-flex justify-content-center m-4" id = "comments-load-more-ctrl">
+                            <a href="javascript:moreComments();" class="btn btn-block btn-lg text-body special load-more-btn"
+                               ${article.comments >  fn:length(comments) ? '' : 'style="display:none"' }>Загрузить еще</a>
+                            <img src="https://acegif.com/wp-content/uploads/loading-97.gif" style="width: 20%" class="loading-indicator" />
+                        </div>
+
+                    </section>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 navig right">
+                <div class="card p-3">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <jsp:include page="../fragment/videoCategory.jsp" />
+                    </div>
+
+                    <form action="${pageContext.request.contextPath}/search" method="GET">
+                        <div class="input-group mt-4">
+                            <input id="search" class="form-control" name="query" placeholder="поиск" type="text" value="${searchQuery }" aria-label="Search" aria-describedby="search-addon"/>
+                            <div class="input-group-button">
+                                <button class="btn btn_search" value="Find" type="submit" ><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer class="text-white">
+    <#import "blocks/footer.ftl" as footer>
+    <@footer.footer />
+</footer>
+
+</body>
